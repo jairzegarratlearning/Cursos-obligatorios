@@ -218,8 +218,8 @@ const SB = {   // cliente de Supabase (REST/RPC con fetch; no requiere librería
   ok() { return /^https:\/\//.test(this.url) && this.key && !/PEGA/i.test(this.key); },
   async rpc(fn, args = {}) {
     const r = await fetch(`${this.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: this.key, 'Content-Type': 'application/json' }, body: JSON.stringify(args) });
-    if (!r.ok) { let m = r.statusText; try { const j = await r.json(); m = j.message || j.hint || m; } catch (e) { } throw new Error(m); }
-    return r.json();
+        if (!r.ok) { let m = r.statusText; try { const j = await r.json(); m = j.message || j.hint || m; } catch (e) { } throw new Error(m); }
+    const t = await r.text(); return t ? JSON.parse(t) : null;   // las funciones que devuelven void responden con cuerpo vacío
   },
   askClave() {   // la clave de administración solo vive en memoria durante la sesión
     return new Promise(res => { if (this.clave) return res(this.clave);
